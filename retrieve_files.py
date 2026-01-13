@@ -33,7 +33,7 @@ async def main():
     branches = [b["name"] for b in branch_data["branches"]]
 
     if not branches:
-        print("No branches found")
+        print("Repository has no branches")
         return
 
     retrieve_branch_files(

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Java WebSocket Test</title>
+</head>
+
+<body>
+    <h2>🧩 Java WebSocket Execution Test</h2>
+
+    <textarea id="code" rows="12" cols="80">
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello from WebSocket!");
+    }
+}
+  </textarea>
+    <br />
+    <button id="connectBtn">Run Code</button>
+    <button id="sendInputBtn">Send Input</button>
+    <input type="text" id="inputText" placeholder="Enter input..." />
+
+    <pre id="output"></pre>
+
+    <script>
+        let ws;
+
+        document.getElementById("connectBtn").onclick = () => {
+            const code = document.getElementById("code").value;
+            const output = document.getElementById("output");
+            output.textContent = "Connecting...\n";
+
+            ws = new WebSocket("http://13.201.51.119:8000/ws/execute_java/");
+
+            ws.onopen = () => {
+                output.textContent += "✅ Connected to WebSocket\n";
+                ws.send(JSON.stringify({ code }));
+            };
+
+            ws.onmessage = (event) => {
+                output.textContent += event.data + "\n";
+            };
+
+            ws.onclose = () => {
+                output.textContent += "🔌 Connection closed.\n";
+            };
+
+            ws.onerror = (err) => {
+                output.textContent += "⚠️ WebSocket error: " + err + "\n";
+            };
+        };
+
+        document.getElementById("sendInputBtn").onclick = () => {
+            const inputVal = document.getElementById("inputText").value;
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(inputVal);
+            }
+        };
+    </script>
+</body>
+
+</html>
